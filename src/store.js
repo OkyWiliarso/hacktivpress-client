@@ -43,6 +43,24 @@ export default new Vuex.Store({
     },
     article: function (context, payload) {
       context.commit('article', payload)
+    },
+    getCategory: function (context, payload) {
+      axios.get(`http://localhost:3000/articles/category/${payload}`)
+      .then(response => {
+        context.commit('pushArticles', response.data.response)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getAuthor: function (context, payload) {
+      axios.get(`http://localhost:3000/articles/author/${payload}`)
+      .then(response => {
+        context.commit('pushArticles', response.data.response)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }
 })

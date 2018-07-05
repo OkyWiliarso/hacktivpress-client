@@ -3,13 +3,24 @@
     <Navbar/>
       <h3>Articles.</h3>
 
-      <div class="search">
+      <div class="row">
         <div class="col s12">
           <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s12">
               <i class="material-icons prefix">textsms</i>
-              <input type="text" id="autocomplete-input" class="autocomplete">
-              <label for="autocomplete-input">Autocomplete</label>
+              <input type="text" id="autocomplete-input" class="autocomplete" v-model="category" @keyup.enter="byCategory">
+              <label for="autocomplete-input">Search by Category</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">textsms</i>
+              <input type="text" id="autocomplete-input" class="autocomplete" v-model="author" @keyup.enter="byAuthor">
+              <label for="autocomplete-input">Search by Author</label>
             </div>
           </div>
         </div>
@@ -23,7 +34,7 @@
             <span class="title" @click="articleDetail(article)">{{article.title}}</span>
             </router-link>
             <p>Author : {{ article.authorName }} </p>
-            <p><span>{{ article.createdAt | moment("dddd, MMMM Do YYYY") }}</span></p>
+            <p>Category : {{ article.category }} </p>
             <a v-if="loginStatus" class="secondary-content" @click="deleteArticle(article._id)" href="#"><i class="material-icons">delete</i></a>
           </li>
         </div>
@@ -44,6 +55,12 @@ export default {
   components: {
     Navbar,
     Footer
+  },
+  data () {
+    return {
+      category: '',
+      author: ''
+    }
   },
   computed: {
     ...mapState([
@@ -71,10 +88,23 @@ export default {
       })
       .catch(err => {
         console.log(err)
+        swal({
+          type: 'error',
+          title: 'Oops...',
+          text: 'Not Authorized!'
+        })
       })
     },
     articleDetail: function (article) {
       this.$store.dispatch('article',article)
+    },
+    byCategory: function () {
+      this.$store.dispatch('getCategory',this.category)
+      this.category = ''
+    },
+    byAuthor: function () {
+      this.$store.dispatch('getAuthor',this.author)
+      this.author = '' 
     }
   },
   created () {
